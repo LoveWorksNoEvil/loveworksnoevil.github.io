@@ -1,10 +1,5 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Love Works No Evil</title>
-  </head>
-  <body>
-    <h1>Welcome to Love Works No Evil!</h1>
-    <p>This is the homepage for your GitHub Pages site.</p>
-  </body>
+<head><title>Test Page</title></head>
+<body><h1>GitHub Pages is working!</h1></body>
 </html>

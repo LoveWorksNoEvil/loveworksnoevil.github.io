@@ -14,11 +14,33 @@
       font-family: Arial, sans-serif;
       padding: 20px;
     }
-    h1 {
-      font-family: 'Bangers', cursive;
-        letter-spacing: 0.05em;
-      font-weight: bold;
-    }
+    
+h1 {
+  font-family: 'Bangers';
+  letter-spacing: 0.05em;
+  font-weight: bold;
+  font-size: 4rem; 
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  h1 {
+    font-size: 3rem; 
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem; 
+  }
+}
+
+    .button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
     p.links-text {
       font-family: 'Book Antiqua', Palatino, serif;
       font-weight: bold;
@@ -35,8 +57,9 @@
   </style>
 </head>
 <body>
+  <div class="button-container">
   <h1>Love Works No Evil</h1>
-
+  </div>
   <p class="links-text">Links:</p>
   <ul>
     <li><a href="https://loveworksnoevil.com/" target="_blank" rel="noopener noreferrer">Love Works No Evil</a></li>

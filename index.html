@@ -6,8 +6,42 @@
 
   <!-- Load Bangers font from Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+
 
   <style>
+footer {
+  font-family: 'Book Antiqua', Palatino, serif;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+
+.social-icons {
+  list-style: none;
+  padding: 0;
+}
+
+.social-icons li {
+  margin-bottom: 10px;
+}
+
+.social-icons a {
+  color: #aad4ff;
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.social-icons a i {
+  margin-right: 8px;
+}
+
+.social-icons a:hover {
+  color: white;
+}
+
     body {
       background-color: #022a49;
       color: white;
@@ -19,18 +53,18 @@ h1 {
   font-family: 'Bangers';
   letter-spacing: 0.05em;
   font-weight: bold;
-  font-size: 4rem; 
+  font-size: 7rem; 
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {
   h1 {
-    font-size: 3rem; 
+    font-size: 4rem; 
   }
 }
 
 @media (max-width: 768px) {
   h1 {
-    font-size: 2rem; 
+    font-size: 4rem; 
   }
 }
 
@@ -54,6 +88,16 @@ h1 {
     a:hover {
       text-decoration: underline;
     }
+
+.social-icons li {
+  margin-bottom: 15px;
+}
+
+#j1, #j2 {
+  margin-bottom: 20px; /* Adjust the value as you want */
+}
+
+
   </style>
 </head>
 <body>
@@ -62,9 +106,43 @@ h1 {
   </div>
   <p class="links-text">Links:</p>
   <ul>
-    <li><a href="https://loveworksnoevil.com/" target="_blank" rel="noopener noreferrer">Love Works No Evil</a></li>
-    <li><a href="https://x.com/loveworksnoevil" target="_blank" rel="noopener noreferrer">Twitter (X)</a></li>
-    <li><a href="https://www.youtube.com/@loveworksnoevil" target="_blank" rel="noopener noreferrer">YouTube Channel</a></li>
+
+    <p class="links-text">Follow Us:</p>
+<ul class="social-icons">
+  <li>
+    <a href="https://loveworksnoevil.com/" target="_blank" rel="noopener noreferrer">
+      <i class="fas fa-globe"></i> Love Works No Evil
+    </a>
+  </li>
+  <li>
+    <a href="https://x.com/loveworksnoevil" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-x-twitter"></i> Twitter (X)
+    </a>
+  </li>
+  <li>
+    <a href="https://www.youtube.com/@loveworksnoevil" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-youtube"></i> YouTube
+    </a>
+  </li>
+</ul>
+
+<p class="links-text">Apps:</p>
+
+
+    <li>
+  <a href="https://play.google.com/store/apps/details?id=jesuswordsinterline.ar&pli=1" target="_blank" rel="noopener noreferrer">
+    <i class="fab fa-google-play" id="j2"></i> Jesus Words Interlinear (Google Play)
+  </a>
+</li>
+<li>
+  <a href="https://play.google.com/store/apps/details?id=my.notepadsaverpro" target="_blank" rel="noopener noreferrer">
+    <i class="fab fa-google-play" id="j1"></i> Notepad Saver Pro (Google Play)
+  </a>
+</li>
+
   </ul>
+    <footer>© 2025 Love Works No Evil</footer>
 </body>
+
+
 </html>

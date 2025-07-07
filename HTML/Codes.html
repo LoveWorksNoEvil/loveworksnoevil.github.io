@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TXT to Image ZIP Converter</title>
+  <style>
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background: #f9f9f9;
+    }
+    h2 {
+      color: #022a49;
+    }
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+    #output img {
+      max-width: 100%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+    #status {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+  <h2>TXT to PNG to ZIP Converter</h2>
+  <p>Select one or more `.txt` files to convert each line into PNG images and download them as a ZIP.</p>
+  <input type="file" id="fileInput" multiple accept=".txt" />
+  <p id="status"></p>
+  <div id="output"></div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const output = document.getElementById('output');
+    const status = document.getElementById('status');
+
+    const canvasWidth = 720;
+    const canvasHeight = 480;
+    const lineHeight = 28;
+    const padding = 10;
+    const maxLinesPerPage = Math.floor((canvasHeight - padding * 2) / lineHeight);
+    const font = "20px 'Noto Sans', sans-serif";
+
+    fileInput.addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files);
+      const zip = new JSZip();
+      status.textContent = "Processing files...";
+
+      for (const file of files) {
+        const text = await file.text();
+        const pages = paginateText(text);
+        pages.forEach((lines, index) => {
+          const img = renderLinesToImage(lines);
+          const filename = `${file.name.replace('.txt', '')}_page${index + 1}.png`;
+          const dataURL = img.toDataURL("image/png");
+          const base64 = dataURL.split(',')[1];
+          zip.file(filename, base64, { base64: true });
+        });
+      }
+
+      status.textContent = "Creating ZIP...";
+      zip.generateAsync({ type: "blob" }).then(blob => {
+        saveAs(blob, "converted_text_images.zip");
+        status.textContent = "✅ Done! ZIP is downloading.";
+      }).catch(err => {
+        console.error("ZIP error:", err);
+        status.textContent = "❌ Error creating ZIP.";
+      });
+    });
+
+    function paginateText(text) {
+      const rawLines = text.split(/\r?\n/); // Handle newlines
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.font = font;
+
+      const wrappedLines = [];
+
+      for (let line of rawLines) {
+        if (!line.trim()) {
+          wrappedLines.push(''); // Preserve blank lines
+          continue;
+        }
+
+        let currentLine = '';
+        const words = line.split(/\s+/);
+        for (let word of words) {
+          const testLine = currentLine + word + ' ';
+          if (ctx.measureText(testLine).width > canvasWidth - padding * 2) {
+            wrappedLines.push(currentLine.trim());
+            currentLine = word + ' ';
+          } else {
+            currentLine = testLine;
+          }
+        }
+        if (currentLine) wrappedLines.push(currentLine.trim());
+      }
+
+      const pages = [];
+      for (let i = 0; i < wrappedLines.length; i += maxLinesPerPage) {
+        pages.push(wrappedLines.slice(i, i + maxLinesPerPage));
+      }
+
+      return pages;
+    }
+
+    function renderLinesToImage(lines) {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#000";
+      ctx.font = font;
+
+      let y = padding + lineHeight;
+      lines.forEach(line => {
+        ctx.fillText(line, padding, y);
+        y += lineHeight;
+      });
+      return canvas;
+    }
+  </script>
+</body>
+</html>

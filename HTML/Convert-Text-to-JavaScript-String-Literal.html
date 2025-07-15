@@ -43,8 +43,10 @@
 
 <br />
 <button onclick="convertToEscaped()">Convert to Escaped String Literal</button>
+  
 
 <h3>Escaped String Literal Output:</h3>
+<button id="copyBtn" onclick="copyOutput()" style="display:none;">Copy to Clipboard</button>
 <div id="output"></div>
 
 <script>
@@ -68,6 +70,17 @@ function convertToEscaped() {
   escaped = `"${escaped}",`;
 
   document.getElementById('output').textContent = escaped;
+}
+
+  function copyOutput() {
+  const outputText = document.getElementById('output').textContent;
+  if (!outputText) return;
+
+  navigator.clipboard.writeText(outputText).then(() => {
+    alert('Copied to clipboard!');
+  }).catch(err => {
+    alert('Failed to copy: ' + err);
+  });
 }
 </script>
 

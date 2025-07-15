@@ -30,7 +30,7 @@
     font-style: italic;
     white-space: pre-line;
   }
-   button {
+  button {
     margin-top: 10px;
   }
 </style>
@@ -40,13 +40,10 @@
 <h2>Enter multiline text</h2>
 <div class="byline"> Uploaded by Love Works No Evil
   Code By ChatGPT</div>
-<textarea id="inputText" placeholder="Paste or type your text here...">
-
-</textarea>
+<textarea id="inputText" placeholder="Paste or type your text here..."></textarea>
 
 <br />
 <button onclick="convertToEscaped()">Convert to Escaped String Literal</button>
-  
 
 <h3>Escaped String Literal Output:</h3>
 <button id="copyBtn" onclick="copyOutput()" style="display:none;">Copy to Clipboard</button>
@@ -73,13 +70,12 @@ function convertToEscaped() {
   escaped = `"${escaped}",`;
 
   document.getElementById('output').textContent = escaped;
-   // Show the copy button when there's output
-
+  
+  // Show the copy button when there's output
   document.getElementById('copyBtn').style.display = escaped ? 'inline-block' : 'none';
-
 }
 
-  function copyOutput() {
+function copyOutput() {
   const outputText = document.getElementById('output').textContent;
   if (!outputText) return;
 

@@ -257,7 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const list = document.getElementById('all-links-list');
 
   allLinks.forEach(link => {
-    if (link.href.startsWith(baseURL)) {
+    if (
+      link.href.startsWith(baseURL) &&
+      !link.href.endsWith('index.html')  // exclude index.html
+    ) {
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = link.href;

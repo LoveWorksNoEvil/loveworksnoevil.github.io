@@ -75,6 +75,12 @@ function convertToEscaped() {
   document.getElementById('output').textContent = escaped;
 }
 
+   // Show the copy button when there's output
+
+  document.getElementById('copyBtn').style.display = escaped ? 'inline-block' : 'none';
+
+}
+
   function copyOutput() {
   const outputText = document.getElementById('output').textContent;
   if (!outputText) return;

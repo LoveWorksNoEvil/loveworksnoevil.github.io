@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Convert Text to Escaped String Literal with Quotes and Comma</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  textarea {
+    width: 100%;
+    height: 180px;
+    font-family: monospace;
+    font-size: 16px;
+  }
+  #output {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+  .byline {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h2>Enter multiline text</h2>
+<div class="byline">By ChatGPT</div>
+<textarea id="inputText" placeholder="Paste or type your text here...">
+
+</textarea>
+
+<br />
+<button onclick="convertToEscaped()">Convert to Escaped String Literal</button>
+
+<h3>Escaped String Literal Output:</h3>
+<div id="output"></div>
+
+<script>
+function convertToEscaped() {
+  let text = document.getElementById('inputText').value;
+
+  // Normalize line endings to \n (handle Windows)
+  text = text.replace(/\r\n/g, '\n');
+
+  // Collapse multiple blank lines (3 or more) to exactly two newlines
+  text = text.replace(/\n{3,}/g, '\n\n');
+
+  // Escape backslashes first
+  let escaped = text.replace(/\\/g, '\\\\');
+  // Escape double quotes
+  escaped = escaped.replace(/"/g, '\\"');
+  // Replace newlines with \n
+  escaped = escaped.replace(/\n/g, '\\n');
+
+  // Wrap with quotes and add trailing comma
+  escaped = `"${escaped}",`;
+
+  document.getElementById('output').textContent = escaped;
+}
+</script>
+
+</body>
+</html>

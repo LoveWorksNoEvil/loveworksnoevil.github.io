@@ -192,12 +192,8 @@ h1 {
   <div class="button-container">
   <h1>Love Works No Evil</h1>
   </div>
-    <p class="links-text">HTML Codes Provided By Chatgpt:</p>
-   <li>
-    <a href="https://loveworksnoevil.github.io/HTML/text2imagebatch.html" target="_blank" rel="noopener noreferrer">
-      <i class="fas fa-globe"></i> Txt to Image PNG) Batch(zip) Converter
-    </a>
-  </li>
+<p class="links-text">HTML Codes Provided By ChatGPT:</p>
+<ul id="all-links-list"></ul>
   <p class="links-text">Links:</p>
   <ul>
 
@@ -254,6 +250,27 @@ h1 {
   </ul>
     <footer>© 2025 Love Works No Evil</footer>
 </body>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const baseURL = 'https://loveworksnoevil.github.io/HTML/';
+  const allLinks = document.querySelectorAll('a[href]');
+  const list = document.getElementById('all-links-list');
+
+  allLinks.forEach(link => {
+    if (link.href.startsWith(baseURL)) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.textContent = link.textContent.trim() || link.href;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      li.appendChild(a);
+      list.appendChild(li);
+    }
+  });
+});
+</script>
 
 
 </html>

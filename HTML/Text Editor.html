@@ -1,1 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Combined Text Editor</title>
+  <style>
+    body {
+      color: #0000CD;
+      font-family: Arial, sans-serif;
+      background-color: #5c5c5c; /* Body color */
+    }
 
+    .container {
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #4f4f4f; /* Darker container color */
+    }
+
+    label {
+      margin-bottom: 8px;
+      color: white; /* Updated label color for contrast */
+    }
+
+    #inputText {
+      background-color: #D3D3D3;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      width: 100%;
+      height: 150px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    button {
+      padding: 7px 14px;
+      border: 2px solid silver;
+      font-family: "Inika", serif;
+      font-weight: bold;
+      font-size: 1.0em;
+      color: #e4e4e4;
+      background-color: #2099c4;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #022a49;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .section {
+      display: none; /* Hide all sections by default */
+    }
+
+    .custom-text-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #lineCharacterCount {
+      margin-top: 20px;
+      color: white; /* Updated text color for contrast */
+    }
+
+    #individualCounts {
+      display: none;
+      margin-top: 20px;
+      width: 100%;
+      height: 150px;
+      background-color: #D3D3D3;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      overflow: auto;
+    }
+
+    #untilCharacterSection {
+      display: none; /* Hide initially */
+    }
+
+  </style>
+  <script>
+
+
+   
+  
+
+    
+
+   
+   
+    function toggleSections() {
+      const selectedOption = document.getElementById('editorSelector').value;
+      const incrementalSection = document.getElementById('incrementalSection');
+      const lineBreakSection = document.getElementById('lineBreakSection');
+      const lineCharacterCountSection = document.getElementById('lineCharacterCount');
+      const inputText = document.getElementById('inputText');
+      const countButtons = document.querySelectorAll('.count-buttons');
+
+      // Hide all sections and buttons by default
+      incrementalSection.style.display = 'none';
+      lineBreakSection.style.display = 'none';
+      lineCharacterCountSection.style.display = 'none';
+      countButtons.forEach(button => button.style.display = 'none');
+      untilCharacterSection.style.display = 'none'; // Hide untilCharacterSection by default
+
+ if (selectedOption === 'incremental') {
+        individualCounts.style.display = 'none';
+        incrementalSection.style.display = 'block';
+        inputText.value = "This is *\nThis is an *\nThis is an html *\nThis is an html text *\nThis is an html text editor*"; // Set initial text for incremental section
+      } else if (selectedOption === 'lineBreaks') {
+        individualCounts.style.display = 'none';
+        lineBreakSection.style.display = 'block';
+        inputText.value = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8\nLine 9\nLine 10\nLine 11\nLine 12\nLine 13\nLine 14\nLine 15"; // Set initial text for line break section
+      } else if (selectedOption === 'lineCharacterCount') {
+        lineCharacterCountSection.style.display = 'block';
+        individualCounts.style.display = 'block';
+        inputText.value = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5"; // Set initial text for character counting section
+        countButtons.forEach(button => button.style.display = 'block'); // Show count buttons
+      }
+    }
+
+ // Show or hide the "Enter Character(s) to Count Until" field based on Count Mode selection
+
+    function toggleUntilCharacterField() {
+      const countMode = document.getElementById('countMode').value;
+      const untilCharacterSection = document.getElementById('untilCharacterSection'); 
+
+
+      // Show if 'countUntil' is selected, else hide
+
+      if (countMode === 'countUntil') {
+        untilCharacterSection.style.display = 'block';
+      } else {
+        untilCharacterSection.style.display = 'none';
+      }
+    }
+
+
+
+   function replaceWords() {
+  let text = document.getElementById('inputText').value;
+  let targetWord = document.getElementById('targetWord').value.trim() || "*";
+  let customReplacement = document.getElementById('replacementWord').value.trim() || "&nbsp;";
+  targetWord = escapeRegExp(targetWord);
+  let incrementValue = parseInt(document.getElementById('incrementValue').value.trim()) || 1;
+  let incrementMode = document.getElementById('incrementMode').value;
+  let count = incrementMode === "number" ? 1 : 0;
+
+  const resetCountInterval = parseInt(document.getElementById('resetCountInterval').value.trim()) || 14;
+  const resetCountEnabled = document.getElementById('resetCountCheckbox').checked;  // Whether to reset the count or not
+
+  let occurrences = 0;  // Track the number of occurrences
+
+  const updatedText = text.replace(new RegExp(targetWord, 'g'), function() {
+    // If reset count is enabled and occurrences reach the reset interval, reset the count
+    if (resetCountEnabled) {
+      if (occurrences >= resetCountInterval) {
+        count = 1;  // Reset count to 1
+        occurrences = 0;  // Reset occurrences
+      }
+    }
+      let replacementText;
+if (customReplacement === "&nbsp;") {
+    replacementText = (incrementMode === "number") ? customReplacement + count : customReplacement + "&nbsp;".repeat(count);
+     } else {
+    replacementText = (incrementMode === "number") ? customReplacement + count : customReplacement.repeat(count);
+}
+    count += incrementValue;
+    occurrences++;  // Increment the number of occurrences
+
+    return replacementText;
+  });
+
+  document.getElementById('inputText').value = updatedText;
+}
+
+
+    function addLineBreaks() {
+      const textarea = document.getElementById('inputText');
+      const lineInterval = parseInt(document.getElementById('lineInterval').value, 10);
+      const breakChoice = document.getElementById('breakChoice').value;
+      const customText = document.getElementById('customText').value;
+      const positionChoice = document.getElementById('positionChoice').value;
+
+      let lines = textarea.value.split('\n');
+      for (let i = lineInterval - 1; i < lines.length; i += lineInterval) {
+        if (breakChoice === "newline") {
+          if (positionChoice === "before") {
+            lines[i] = '\n' + lines[i];  // Insert line break before
+          } else {
+            lines[i] += '\n';  // Insert line break after
+          }
+        } else if (breakChoice === "text") {
+          if (positionChoice === "before") {
+            lines[i] = customText + lines[i];  // Insert custom text before
+          } else {
+            lines[i] += customText;  // Insert custom text after
+          }
+        }
+      }
+      textarea.value = lines.join('\n');
+    }
+
+    function escapeRegExp(str) {
+      return str.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, "\\$&");
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('inputText');
+      const range = document.createRange();
+      range.selectNode(text);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+    }
+
+
+
+function countLineMeasures() {
+  const text = document.getElementById('inputText').value;
+  const lines = text.split('\n');
+  const untilChar = document.getElementById('customT7').value; // Get the character(s) to count until
+  const mode = document.getElementById('countMode').value; // Check whether to count all or until a specific char
+  const treatHTMLSpaces = document.getElementById('treatHTMLSpaces').checked; // Check if HTML spaces should be counted as 1 character
+  let totalChars = 0;
+  let maxLineLength = 0;
+  let maxLine = 0;
+  let lineCounts = "";
+  let sumOfAllLines = 0;
+  let outputText = "";
+
+  // Helper function to treat HTML entities like &nbsp; and <p> as single characters
+  function treatHTMLEntities(line) {
+    if (treatHTMLSpaces) {
+      // Replace all occurrences of &nbsp; and <p> with a single character (space)
+      line = line.replace(/&nbsp;/g, ' ').replace(/<p>/g, ' ').replace(/<\/p>/g, ' ');
+    }
+    return line;
+  }
+
+  lines.forEach((line, index) => {
+    let partialLineLength = line.length; // Default to full line length
+    let occurrences = [];
+
+    // Apply treatment for HTML entities
+    let treatedLine = treatHTMLEntities(line);
+
+    // Now we calculate the length of the treated line
+    partialLineLength = treatedLine.length;
+
+    if (mode === 'countUntil') {
+      // Find all occurrences of the specified character
+      let startPos = 0;
+      while ((startPos = treatedLine.indexOf(untilChar, startPos)) !== -1) {
+        occurrences.push(startPos + 1); // Store the 1-based index positions
+        startPos++;
+      }
+
+      // If occurrences were found, count characters up to the last occurrence
+      if (occurrences.length > 0) {
+        partialLineLength = occurrences[occurrences.length - 1];
+        lineCounts += `Line ${index + 1}: Occurrences of "${untilChar}" at positions: ${occurrences.join(', ')}\n`;
+      } else {
+        // If no occurrences, show "No occurrences"
+        lineCounts += `Line ${index + 1}: No occurrences of "${untilChar}"\n`;
+        partialLineLength = 0; // Set the line length to 0 for no occurrences
+      }
+    } else if (mode === 'countAll') {
+      // Count all characters if mode is 'countAll'
+      totalChars += partialLineLength;
+    }
+
+    sumOfAllLines += partialLineLength;
+
+    // Track the longest line
+    if (partialLineLength > maxLineLength) {
+      maxLineLength = partialLineLength;
+      maxLine = index + 1;
+    }
+
+    // Track individual line counts for countAll mode
+    if (mode === 'countAll') {
+      lineCounts += `Line ${index + 1}: ${partialLineLength} characters\n`;
+    }
+  });
+
+  // Construct the final summary output
+  if (mode === 'countAll') {
+    outputText += `Greatest Line: Line ${maxLine} with ${maxLineLength} characters\n`;
+    outputText += `Total Characters: ${sumOfAllLines} characters\n\n`;
+  }
+
+  // Display the final output in the #lineCharacterCount div
+  document.getElementById('lineCharacterCount').innerText = outputText;
+
+  // Display the individual line counts in the #individualCounts textarea
+  document.getElementById('individualCounts').value = lineCounts;
+}
+
+   
+
+
+    window.onload = toggleSections; // Call on load to set initial visibility
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Combined Text Editor</h1>
+    <textarea id="inputText" rows="4" cols="50">
+Line 1
+Line 2
+Line 3
+Line 4
+Line 5
+    </textarea><br><br>
+    
+    <label for="editorSelector">Select Editor Mode:</label>
+    <select id="editorSelector" onchange="toggleSections()">
+      <option value="incremental">Incremental Text Replacer</option>
+      <option value="lineBreaks">Line Break Editor</option>
+      <option value="lineCharacterCount">Line Character Counter</option>
+    </select>
+    <br><br>
+
+    <div id="incrementalSection" class="section">
+      <h2>Incremental Text Replacer</h2>
+      <label for="targetWord">Word to Replace:</label>
+      <input type="text" id="targetWord" value="*"><br><br>
+      
+      <label for="replacementWord">Replacement Word:</label>
+      <input type="text" id="replacementWord" value="&nbsp;"><br><br>
+      
+      <label for="incrementMode">Choose Increment Mode:</label>
+      <select id="incrementMode">
+        <option value="number">Add Incremental Number</option>
+        <option value="spaces">Increment Characters By Value</option>
+      </select><br><br>
+      
+      <label for="incrementValue">Increment Value:</label>
+      <input type="number" id="incrementValue" value="1"><br><br>
+      <input type="checkbox" id="resetCountCheckbox">
+      <label for="resetCountInterval">Reset Count After Every:</label>
+            <input type="number" id="resetCountInterval" value="14" min="1">
+      <label for="resetCountCheckbox">Occurrences</label>
+      
+
+      <div class="buttons-container">
+        <button onclick="replaceWords()">Replace Words</button>
+        <button onclick="copyToClipboard()">Copy Text</button>
+      </div>
+    </div>
+
+    <div id="lineBreakSection" class="section">
+      <h2>Add Custom Line Breaks</h2>
+      <label for="lineInterval">Line Interval:</label>
+      <input type="number" id="lineInterval" value="7" min="1"><br><br>
+      
+      <label for="breakChoice">Choose what to add after interval:</label>
+      <select id="breakChoice">
+        <option value="newline">Line Break</option>
+        <option value="text">Custom Text</option>
+      </select><br><br>
+
+      <div class="custom-text-container">
+        <label for="customText">Enter custom text:</label>
+        <input type="text" id="customText" value="-">
+        <label for="positionChoice">Add:</label>
+        <select id="positionChoice">
+          <option value="before">Before</option>
+          <option value="after">After</option>
+        </select>
+      </div><br><br>
+
+      <div class="buttons-container">
+        <button onclick="addLineBreaks()">Apply Line Breaks</button>
+        <button onclick="copyToClipboard()">Copy Text</button>
+      </div>
+    </div>
+
+    <div id="lineCharacterCount" class="section"></div>
+    <textarea id="individualCounts" rows="4" cols="50" placeholder="Individual line counts will appear here..." readonly></textarea><br>
+    <div class="buttons-container count-buttons" style="display: none;">
+     <label for="countMode">Count Mode:</label>
+     <select id="countMode" onchange="toggleUntilCharacterField()">
+              <option value="countAll">Count All Characters</option>
+        <option value="countUntil">Count Characters Until Specified Character</option>
+      </select><br><br>
+
+
+      <label for="treatHTMLSpaces">Count <code>&lt;p&gt;</code> and <code>&amp;nbsp;</code> as 1 character:</label>
+      <input type="checkbox" id="treatHTMLSpaces"><br><br>
+
+        <div id="untilCharacterSection">
+        <label for="customT7">Enter Character(s) to Count Until:</label>
+        <input type="text" id="customT7" value="2"><br><br>
+        </div>
+
+      <div class="buttons-container">
+        <button onclick="countLineMeasures()">Count Line Measures</button>
+        <button onclick="copyToClipboard()">Copy Counts</button>
+      </div>
+  </div>
+</body>
+</html>
